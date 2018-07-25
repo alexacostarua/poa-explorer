@@ -12,7 +12,8 @@ defmodule Explorer.Repo.Migrations.CreateTokenTransfers do
       add(:log_index, :integer, null: false)
       add(:from_address_hash, references(:addresses, column: :hash, type: :bytea), null: false)
       add(:to_address_hash, references(:addresses, column: :hash, type: :bytea), null: false)
-      add(:amount, :decimal, null: false)
+      # Some token transfers do not have a fungible value like ERC721 transfers
+      add(:amount, :decimal, null: true)
       add(:token_contract_address_hash, references(:addresses, column: :hash, type: :bytea), null: false)
 
       timestamps()

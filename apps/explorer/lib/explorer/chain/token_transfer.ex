@@ -78,11 +78,14 @@ defmodule Explorer.Chain.TokenTransfer do
     timestamps()
   end
 
+  @required_attrs ~w(log_index from_address_hash to_address_hash token_contract_address_hash transaction_hash)a
+  @optional_attrs ~w(amount)a
+
   @doc false
   def changeset(%TokenTransfer{} = struct, params \\ %{}) do
     struct
-    |> cast(params, ~w(amount log_index from_address_hash to_address_hash token_contract_address_hash transaction_hash))
-    |> validate_required(~w(log_index from_address_hash to_address_hash token_contract_address_hash))
+    |> cast(params, @required_attrs ++ @optional_attrs)
+    |> validate_required(@required_attrs)
     |> foreign_key_constraint(:from_address)
     |> foreign_key_constraint(:to_address)
     |> foreign_key_constraint(:token_contract_address)

@@ -17,7 +17,8 @@ defmodule Indexer.BlockFetcherTest do
     BufferedTask,
     InternalTransactionFetcher,
     InternalTransactionFetcherCase,
-    Sequence
+    Sequence,
+    TokenFetcherCase
   }
 
   @moduletag capture_log: true
@@ -223,6 +224,7 @@ defmodule Indexer.BlockFetcherTest do
       start_supervised!({Task.Supervisor, name: Indexer.TaskSupervisor})
       AddressBalanceFetcherCase.start_supervised!(json_rpc_named_arguments: json_rpc_named_arguments)
       InternalTransactionFetcherCase.start_supervised!(json_rpc_named_arguments: json_rpc_named_arguments)
+      TokenFetcherCase.start_supervised!(json_rpc_named_arguments: json_rpc_named_arguments)
       start_supervised!({BlockFetcher, json_rpc_named_arguments: json_rpc_named_arguments})
 
       first_catchup_block_number = latest_block_number - 1
@@ -266,6 +268,7 @@ defmodule Indexer.BlockFetcherTest do
       start_supervised!({Task.Supervisor, name: Indexer.TaskSupervisor})
       AddressBalanceFetcherCase.start_supervised!(json_rpc_named_arguments: json_rpc_named_arguments)
       InternalTransactionFetcherCase.start_supervised!(json_rpc_named_arguments: json_rpc_named_arguments)
+      TokenFetcherCase.start_supervised!(json_rpc_named_arguments: json_rpc_named_arguments)
 
       # from `setup :state`
       assert_received :catchup_index
@@ -334,6 +337,7 @@ defmodule Indexer.BlockFetcherTest do
       start_supervised!({Task.Supervisor, name: Indexer.TaskSupervisor})
       AddressBalanceFetcherCase.start_supervised!(json_rpc_named_arguments: json_rpc_named_arguments)
       InternalTransactionFetcherCase.start_supervised!(json_rpc_named_arguments: json_rpc_named_arguments)
+      TokenFetcherCase.start_supervised!(json_rpc_named_arguments: json_rpc_named_arguments)
 
       # from `setup :state`
       assert_received :catchup_index
@@ -374,6 +378,7 @@ defmodule Indexer.BlockFetcherTest do
       start_supervised!({Task.Supervisor, name: Indexer.TaskSupervisor})
       AddressBalanceFetcherCase.start_supervised!(json_rpc_named_arguments: json_rpc_named_arguments)
       InternalTransactionFetcherCase.start_supervised!(json_rpc_named_arguments: json_rpc_named_arguments)
+      TokenFetcherCase.start_supervised!(json_rpc_named_arguments: json_rpc_named_arguments)
       {:ok, state} = BlockFetcher.init(json_rpc_named_arguments: json_rpc_named_arguments)
 
       %{state: state}
