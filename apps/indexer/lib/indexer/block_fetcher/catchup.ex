@@ -9,19 +9,24 @@ defmodule Indexer.BlockFetcher.Catchup do
   import Indexer.BlockFetcher, only: [stream_import: 1]
 
   alias Explorer.Chain
-  alias Indexer.{BlockFetcher, BoundInterval, Sequence}
+  alias Indexer.{BalanceFetcher, BlockFetcher, BoundInterval, InternalTransactionFetcher, Sequence}
+
+  @behaviour BlockFetcher
 
   @enforce_keys ~w(block_fetcher bound_interval)a
   defstruct ~w(block_fetcher bound_interval task)a
 
   def new(named_arguments) when is_list(named_arguments) do
+    common_block_fetcher = Keyword.fetch!(named_arguments, :block_fetcher)
+    block_fetcher = %BlockFetcher{common_block_fetcher | callback_module: __MODULE__}
+
     minimum_interval =
       named_arguments
       |> Keyword.fetch!(:block_interval)
       |> div(2)
 
     %__MODULE__{
-      block_fetcher: Keyword.fetch!(named_arguments, :block_fetcher),
+      block_fetcher: block_fetcher,
       bound_interval: BoundInterval.within(minimum_interval..(minimum_interval * 10))
     }
   end
@@ -32,7 +37,7 @@ defmodule Indexer.BlockFetcher.Catchup do
   @spec put(%BlockFetcher.Supervisor{catchup: %__MODULE__{task: nil}}) :: %BlockFetcher.Supervisor{
           catchup: %__MODULE__{task: Task.t()}
         }
-  def put(%BlockFetcher.Supervisor{catchup: %__MODULUE__{task: nil} = state} = supervisor_state) do
+  def put(%BlockFetcher.Supervisor{catchup: %__MODULE__{task: nil} = state} = supervisor_state) do
     put_in(
       supervisor_state.catchup.task,
       Task.Supervisor.async_nolink(Indexer.TaskSupervisor, __MODULE__, :task, [state])
@@ -79,6 +84,23 @@ defmodule Indexer.BlockFetcher.Catchup do
         end
 
         %{first_block_number: first, missing_block_count: missing_block_count}
+    end
+  end
+
+  @async_import_remaning_block_data_options ~w(address_hash_to_fetched_balance_block_number transaction_hash_to_block_number)a
+
+  @impl BlockFetcher
+  def import(_, options) when is_map(options) do
+    {async_import_remaning_block_data_options, chain_import_options} =
+      Map.split(options, @async_import_remaning_block_data_options)
+
+    with {:ok, results} = ok <- Chain.import(chain_import_options) do
+      async_import_remaining_block_data(
+        results,
+        async_import_remaning_block_data_options
+      )
+
+      ok
     end
   end
 
@@ -129,5 +151,24 @@ defmodule Indexer.BlockFetcher.Catchup do
     send(self(), :catchup_index)
 
     put_in(supervisor_state.catchup.task, nil)
+  end
+
+  defp async_import_remaining_block_data(%{transactions: transaction_hashes, addresses: address_hashes}, %{
+         address_hash_to_fetched_balance_block_number: address_hash_to_block_number,
+         transaction_hash_to_block_number: transaction_hash_to_block_number
+       }) do
+    address_hashes
+    |> Enum.map(fn address_hash ->
+      block_number = Map.fetch!(address_hash_to_block_number, to_string(address_hash))
+      %{address_hash: address_hash, block_number: block_number}
+    end)
+    |> BalanceFetcher.async_fetch_balances()
+
+    transaction_hashes
+    |> Enum.map(fn transaction_hash ->
+      block_number = Map.fetch!(transaction_hash_to_block_number, to_string(transaction_hash))
+      %{block_number: block_number, hash: transaction_hash}
+    end)
+    |> InternalTransactionFetcher.async_fetch(10_000)
   end
 end
