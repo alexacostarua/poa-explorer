@@ -56,7 +56,7 @@ msgstr "POA Network Explorer"
 #: lib/explorer_web/templates/block_transaction/index.html.eex:13
 #: lib/explorer_web/templates/block_transaction/index.html.eex:26
 #: lib/explorer_web/templates/block_transaction/index.html.eex:36
-#: lib/explorer_web/templates/chain/_transactions.html.eex:4
+#: lib/explorer_web/templates/chain/show.html.eex:74
 #: lib/explorer_web/templates/layout/_topnav.html.eex:18
 #: lib/explorer_web/templates/pending_transaction/index.html.eex:46
 #: lib/explorer_web/templates/transaction/index.html.eex:46
@@ -299,7 +299,7 @@ msgstr ""
 #: lib/explorer_web/templates/address_internal_transaction/_internal_transaction.html.eex:29
 #: lib/explorer_web/templates/address_transaction/_transaction.html.eex:53
 #: lib/explorer_web/templates/block_transaction/_transaction.html.eex:33
-#: lib/explorer_web/templates/chain/_transactions.html.eex:33
+#: lib/explorer_web/templates/chain/_transaction.html.eex:28
 #: lib/explorer_web/templates/pending_transaction/index.html.eex:71
 #: lib/explorer_web/templates/transaction/index.html.eex:76
 #: lib/explorer_web/templates/transaction/overview.html.eex:81
@@ -369,7 +369,7 @@ msgstr ""
 
 #: lib/explorer_web/templates/address_transaction/_transaction.html.eex:55
 #: lib/explorer_web/templates/block_transaction/_transaction.html.eex:35
-#: lib/explorer_web/templates/chain/_transactions.html.eex:35
+#: lib/explorer_web/templates/chain/_transaction.html.eex:30
 #: lib/explorer_web/templates/pending_transaction/index.html.eex:72
 #: lib/explorer_web/templates/transaction/index.html.eex:77
 msgid "Fee"
@@ -560,7 +560,7 @@ msgid "View All Blocks →"
 msgstr ""
 
 #, elixir-format
-#: lib/explorer_web/templates/chain/_transactions.html.eex:3
+#: lib/explorer_web/templates/chain/show.html.eex:73
 msgid "View All Transactions →"
 msgstr ""
 
@@ -594,11 +594,6 @@ msgstr ""
 #: lib/explorer_web/templates/address_internal_transaction/_internal_transaction.html.eex:4
 #: lib/explorer_web/templates/transaction_internal_transaction/_internal_transaction.html.eex:4
 msgid "Internal Transaction"
-msgstr ""
-
-#, elixir-format
-#: lib/explorer_web/templates/address_transaction/index.html.eex:84
-msgid "More messages have come in"
 msgstr ""
 
 #, elixir-format
@@ -642,7 +637,7 @@ msgstr ""
 #, elixir-format
 #: lib/explorer_web/templates/address_transaction/_transaction.html.eex:45
 #: lib/explorer_web/templates/block_transaction/_transaction.html.eex:25
-#: lib/explorer_web/templates/chain/_transactions.html.eex:25
+#: lib/explorer_web/templates/chain/_transaction.html.eex:20
 #: lib/explorer_web/templates/transaction/index.html.eex:69
 msgid "Block #%{number}"
 msgstr ""
@@ -732,4 +727,10 @@ msgstr ""
 #, elixir-format
 #: lib/explorer_web/templates/address_transaction/_transaction.html.eex:61
 msgid "Transfers"
+msgstr ""
+
+#, elixir-format
+#: lib/explorer_web/templates/address_transaction/index.html.eex:84
+#: lib/explorer_web/templates/chain/show.html.eex:70
+msgid "More transactions have come in"
 msgstr ""
