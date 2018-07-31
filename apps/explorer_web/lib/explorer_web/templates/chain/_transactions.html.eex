@@ -6,7 +6,7 @@
     <div class="tile tile-type-<%= ExplorerWeb.TransactionView.type_suffix(transaction) %> fade-in tile-status--<%= ExplorerWeb.TransactionView.status(transaction) %>" data-test="<%= ExplorerWeb.TransactionView.type_suffix(transaction) %>" data-transaction-hash="<%= transaction.hash %>">
       <div class="row" data-test="chain_transaction">
         <div class="col-md-2 d-flex flex-column align-items-left justify-content-start justify-content-lg-center">
-          <div class="ml-4">
+          <div class="ml-md-4 ml-sm-0">
             <span class="tile-label" data-test="transaction_type">
               <%= ExplorerWeb.TransactionView.transaction_display_type(transaction) %>
             </span>
@@ -15,10 +15,8 @@
             </div>
           </div>
         </div>
-        <div class="col-md-7 col-lg-8 pr-0 d-flex flex-column">
-          <span class="text-<%= ExplorerWeb.TransactionView.type_suffix(transaction) %>">
-            <%= render ExplorerWeb.TransactionView, "_link.html", locale: @locale, transaction_hash: transaction.hash %>
-          </span>
+        <div class="col-md-7 col-lg-8 pr-md-0 pr-sm-2 d-flex flex-column">
+          <%= render ExplorerWeb.TransactionView, "_link.html", locale: @locale, transaction_hash: transaction.hash %>
           <span class="text-nowrap">
             <%= render ExplorerWeb.AddressView, "_link.html", address_hash: transaction.from_address_hash, contract: ExplorerWeb.AddressView.contract?(transaction.from_address), locale: @locale %>
             &rarr;
@@ -26,7 +24,7 @@
           </span>
           <span>
             <span class="tile-title"><%= ExplorerWeb.TransactionView.value(transaction, include_label: false) %> <%= gettext "Ether" %></span>
-            <span class="ml-1">
+            <span class="ml-1 text-nowrap">
               <%= ExplorerWeb.TransactionView.formatted_fee(transaction, denomination: :ether) %> <%= gettext "Fee" %>
             </span>
           </span>
@@ -38,7 +36,7 @@
               to: block_path(@conn, :show, @conn.assigns.locale, transaction.block)
               ) %>
           </span>
-          <span  data-from-now="<%= transaction.block.timestamp %>"></span>
+          <span class="ml-sm-2 ml-md-0" data-from-now="<%= transaction.block.timestamp %>"></span>
         </div>
       </div>
     </div>
